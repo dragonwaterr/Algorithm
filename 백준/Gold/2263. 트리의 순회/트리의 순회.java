@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+    static StringBuilder sb;
     static int[] inorder;
     static int[] postorder;
     static int n;
@@ -45,7 +46,7 @@ public class Main {
     }
 
     static void makePreorder(Node node) {
-        System.out.print(node.data + " ");
+        sb.append(node.data).append(" ");
         if(node.left != null) makePreorder(node.left);
         if(node.right != null) makePreorder(node.right);
     }
@@ -68,6 +69,9 @@ public class Main {
         
         Node root = new Node();
         atchSub(root, n-1, 0, n);
+        
+        sb = new StringBuilder();
         makePreorder(root);
+        System.out.println(sb.toString());
     }
 }
