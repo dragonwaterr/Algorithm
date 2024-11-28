@@ -9,22 +9,7 @@ public class Main {
     static int n;
     static int[][] cost;
     static int[][] trace;
-
-    static void floyd() {
-        for (int k = 1; k <= n; k++) {
-            for (int i = 1; i <= n; i++) {
-                if (i == k) continue;
-                for (int j = 1; j <= n; j++) {
-                    if (k == j || i == j) continue;
-                    if (cost[i][j] > cost[i][k] + cost[k][j]) {
-                        cost[i][j] = cost[i][k] + cost[k][j];
-                        trace[i][j] = trace[k][j]; 
-                    }
-                }
-            }
-        }
-    }
-
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -56,7 +41,28 @@ public class Main {
         }
 
         floyd();
+        printCostMap(sb);
+        printTrace(sb);
 
+        bw.write(sb.toString());
+        bw.flush();
+    }
+
+    static void floyd() {
+        for (int k = 1; k <= n; k++) {
+            for (int i = 1; i <= n; i++) {
+                if (i == k) continue;
+                for (int j = 1; j <= n; j++) {
+                    if (k == j || i == j) continue;
+                    if (cost[i][j] > cost[i][k] + cost[k][j]) {
+                        cost[i][j] = cost[i][k] + cost[k][j];
+                        trace[i][j] = trace[k][j]; 
+                    }
+                }
+            }
+        }
+    }
+    static void printCostMap(StringBuilder sb) {
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
                 if (cost[i][j] == INF) {
@@ -67,11 +73,13 @@ public class Main {
             }
             sb.append("\n");
         }
+    }
 
+    static void printTrace(StringBuilder sb) {
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
 
-                if (i == j || cost[i][j] == INF) {
+                if (i == j || cost[i][j] == INF) { // 두 번째 조건을 간과했다
                     sb.append("0\n");
                     continue;
                 }
@@ -79,7 +87,7 @@ public class Main {
                 Stack<Integer> stack = new Stack<>();
                 stack.push(j); // 도착점
                 int y = j;
-                while(trace[i][y] != i) { // 사이에 있는 경로 push
+                while(trace[i][y] != i) { // 사이에 다른 경로가 있다면 출발점이 나올 때까지 체크
                     stack.push(trace[i][y]);
                     y = trace[i][y];
                 }
@@ -92,9 +100,5 @@ public class Main {
                 sb.append("\n");
             }
         }
-        bw.write(sb.toString());
-        bw.flush();
-        br.close();
-        bw.close();
     }
 }
