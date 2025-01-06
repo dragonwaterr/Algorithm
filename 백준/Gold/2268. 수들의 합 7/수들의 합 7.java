@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 public class Main {
     // 수들의 합 7
@@ -9,20 +6,17 @@ public class Main {
     static int firstLeaf;
     public static void main(String[] args) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+        int n = read();
+        int m = read();
 
         int treeSize = 2 * (int) Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
         segtree = new long[treeSize];
         firstLeaf = segtree.length / 2;
 
         for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            int qType = Integer.parseInt(st.nextToken());
-            int n1 = Integer.parseInt(st.nextToken());
-            int n2 = Integer.parseInt(st.nextToken());
+            int qType = read();
+            int n1 = read();
+            int n2 = read();
             if(qType == 1) {
                 modify(n1 + firstLeaf - 1, n2);
                 continue;
@@ -32,7 +26,6 @@ public class Main {
             }
             sb.append(sum(n1 + firstLeaf - 1, n2 + firstLeaf - 1)).append("\n");
         }
-        br.close();
         System.out.println(sb);
     }
     static void modify(int idx, int num) {
@@ -52,5 +45,12 @@ public class Main {
             to /= 2;
         }
         return result;
+    }
+    static int read() throws IOException {
+        int d, o = System.in.read() & 15;
+        while ((d = System.in.read()) > 32)
+            o = (o << 3) + (o << 1) + (d & 15);
+
+        return o;
     }
 }
