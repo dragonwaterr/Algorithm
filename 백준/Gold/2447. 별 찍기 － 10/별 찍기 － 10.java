@@ -26,20 +26,21 @@ public class Main {
     
     
     static void copy(int curW) {
-        if(curW == n) return;
         
-        for (int i = 0; i < 7; i++) {
-            int sx = 1 + curW * dt[i][0]; 
-            int sy = 1 + curW * dt[i][1]; 
-            
-            for(int j = sx; j < sx + curW; j++) { 
-                for(int k = sy; k < sy + curW; k++) { 
-                    stars[j][k] = stars[j - sx + 1][k - sy + 1];
+        while(curW < n) {
+            for (int i = 0; i < 7; i++) {
+                int sx = 1 + curW * dt[i][0];
+                int sy = 1 + curW * dt[i][1];
+
+                for (int j = sx; j < sx + curW; j++) {
+                    for (int k = sy; k < sy + curW; k++) {
+                        stars[j][k] = stars[j - sx + 1][k - sy + 1];
+                    }
                 }
             }
+            curW *= 3;
         }
-        
-        copy(curW*3);
+
     }
     
     static void printStars() {
