@@ -10,11 +10,16 @@ public class Main {
     static void recur(int k, int start_y, int start_x) {
         if(k == 0) {
             stars[start_y][start_x] = '*';
-            stars[start_y + 1][start_x - 1] = stars[start_y + 1][start_x + 1] = '*';
-            for(int i = -2; i < 3; i++)
-                stars[start_y + 2][start_x + i] = '*';
+            stars[start_y + 1][start_x - 1] = '*';
+            stars[start_y + 1][start_x + 1] = '*';
+            stars[start_y + 2][start_x + -2] = '*';
+            stars[start_y + 2][start_x + -1] = '*';
+            stars[start_y + 2][start_x + 0] = '*';
+            stars[start_y + 2][start_x + 1] = '*';
+            stars[start_y + 2][start_x + 2] = '*';
             return;
         }
+        
         recur(k-1, start_y, start_x);
         recur(k-1, start_y + (3*(int)Math.pow(2, k-1)), start_x - (3*(int)Math.pow(2, k-1)));
         recur(k-1, start_y + (3*(int)Math.pow(2, k-1)), start_x + (3*(int)Math.pow(2, k-1)));
