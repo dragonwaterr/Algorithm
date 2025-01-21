@@ -26,25 +26,29 @@ public class Main {
 
     static void slice(int width, int sx, int sy) {
         int pattern = paper[sx][sy];
-
+        boolean toSlice = false;
+        
         for(int i = sx; i < sx + width; i++) {
             for(int j = sy; j < sy + width; j++) {
-                
-                // 9 등분
-                if(paper[i][j] != pattern) { 
-                    int nextWidth = width/3;
-                    for(int k = 0; k < 3; k++) {
-                        for(int l = 0; l < 3; l++) {
-                            slice(nextWidth, sx + k*nextWidth, sy + l*nextWidth);
-                        }
-                    }
-                    return; // 9 등분을 했다면 현재 색종이 탐색은 종료
+                if(paper[i][j] != pattern) {
+                    toSlice = true;
+                    break;
                 }
-
             }
         }
 
-        answer[pattern + 1]++;
+         // 9 등분
+        if(toSlice) { 
+            int nextWidth = width/3;
+            for(int k = 0; k < 3; k++) {
+                for(int l = 0; l < 3; l++) {
+                    slice(nextWidth, sx + k*nextWidth, sy + l*nextWidth);
+                }
+            }
+            return; // 9 등분을 했다면 현재 색종이 탐색은 종료
+        }
+        
+        answer[pattern + 1]++; 
     }
-
+    
 }
