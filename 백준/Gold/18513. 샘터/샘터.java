@@ -1,9 +1,6 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 public class Main {
     // 샘터
@@ -25,16 +22,13 @@ public class Main {
     static ArrayDeque<Pointer> dq;
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int k = Integer.parseInt(st.nextToken());
+        int n = read();
+        int k = read();
         obs = new HashMap<>();
         dq = new ArrayDeque<>();
 
-        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
-            int pos = Integer.parseInt(st.nextToken());
+            int pos = read();
             obs.put(pos, 'S');
 
             if(obs.get(pos-1) == null) { // 왼쪽 포인터 생성
@@ -69,5 +63,17 @@ public class Main {
 
         System.out.println(answer);
 
+    }
+
+    static int read() throws IOException {
+        int c, n = System.in.read() & 15;
+        boolean m = n == 13;
+        if (m)
+            n = System.in.read() & 15;
+        while ((c = System.in.read()) >= 48)
+            n = (n << 3) + (n << 1) + (c & 15);
+        if (c == 13)
+            System.in.read();
+        return m ? ~n + 1 : n;
     }
 }
