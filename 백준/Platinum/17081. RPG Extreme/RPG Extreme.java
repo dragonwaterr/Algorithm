@@ -5,7 +5,8 @@ import java.util.*;
 
 public class Main {
     // RPG Extreme
-    static final int[][] dt = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // 상하좌우
+    
+    static final int[][] dt = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; 
 
     static int T, n, m;
     static char[][] grid;
@@ -20,7 +21,6 @@ public class Main {
     static class TaekHee {
         int sx, sy, cx, cy, lv, hp, maxHp, att, aAtt, def, aDef, exp, nExp, oparts;
         Set<String> itemSet = new HashSet<>();
-
         TaekHee(int sx, int sy, int cx, int cy, int lv, int hp, int maxHp, int att, int aAtt, int def, int aDef, int exp, int nExp, int oparts) {
             this.sx = sx;
             this.sy = sy;
@@ -37,8 +37,7 @@ public class Main {
             this.nExp = nExp;
             this.oparts = oparts;
         }
-
-        void levelUpCheck() { // 몬스터를 잡고, 경험치를 획득한 뒤 호출
+        void levelUpCheck() { 
             if (exp >= nExp) {
                 lv += 1;
                 exp = 0;
@@ -49,14 +48,12 @@ public class Main {
                 def += 2;
             }
         }
-
-        void getItem(int x, int y) { // 'B' 칸을 만났을 때 호출
+        void getItem(int x, int y) { 
             grid[x][y] = '.';
             int pos = getIntPos(x, y);
             String[] itemInfo = itemBook.get(pos);
             String item = itemInfo[0];
             String detail = itemInfo[1];
-
             if (item.equals("W")) {
                 itemSet.add("W");
                 aAtt = Integer.parseInt(detail);
@@ -75,16 +72,14 @@ public class Main {
                 itemBook.remove(pos);
             }
         }
-
-        void trapped() { // 메인로직에서 trapped() -> isDeadByTrap() 순서로 호출
+        void trapped() { 
             if (itemSet.contains("DX")) {
                 hp -= 1;
                 return;
             }
             hp -= 5;
         }
-
-        boolean isDeadByTrap() { // 사망여부리턴 : true 라면 @ 를 . 로 변경해야함
+        boolean isDeadByTrap() { 
             if (hp > 0) return false;
             if (itemSet.contains("RE")) {
                 hp = maxHp;
@@ -96,40 +91,31 @@ public class Main {
             }
             return true;
         }
-
         void fightWithMonster(Monster monster) {
-            // 둘 중 하나 죽을때까지
             int attack = att + aAtt;
             int firstAttack =
                 itemSet.contains("CO") ?
                     itemSet.contains("DX") ?
                         attack * 3 : attack * 2
                     : attack;
-
-            // 보스에 HU 템 있다면 1대 공짜로 먼저 치기
+            
             if (monster.isBoss && itemSet.contains("HU")) {
                 hp = maxHp;
                 monster.hp -= Math.max(1, firstAttack - monster.def);
-                firstAttack = attack; // 밑에서 보스 1타 중복 반영 방지
+                firstAttack = attack; 
                 if(monster.hp < 1) return;
             }
-
-            // 1타는 선빵
             monster.hp -= Math.max(1, firstAttack - monster.def);
             if(monster.hp < 1) return;
 
             while(true) {
-                // 맞고 시작
                 hp -= Math.max(1, monster.att - (def + aDef));
                 if(hp < 1) return;
-
-                // 때리기
                 monster.hp -= Math.max(1, attack - monster.def);
                 if(monster.hp < 1) return;
             }
         }
-
-        boolean isDeadByMonster() { // 사망여부리턴 : true 라면 @ 를 . 로 변경해야함
+        boolean isDeadByMonster() { 
             if (hp > 0) return false;
             if (itemSet.contains("RE")) {
                 usedRE = true;
@@ -138,18 +124,15 @@ public class Main {
             hp = 0;
             return true;
         }
-
         void getRewardForVictory(int pos) {
             int expReward = monsterBook.get(pos).exp;
-            monsterBook.remove(pos); // 죽은 몬스터 삭제
-            grid[cx][cy] = '.'; // 죽인 자리 빈칸으로
-
-            // HP 아이템 보상 받기
+            monsterBook.remove(pos);
+            grid[cx][cy] = '.'; 
+            
             if (itemSet.contains("HR")) {
                 hp = Math.min(hp + 3, maxHp);
             }
-            // 경험치 얻기
-            if (itemSet.contains("EX")) { // 경험치 1.2배
+            if (itemSet.contains("EX")) { 
                 exp += (int) ((double) expReward * 1.2);
                 return;
             }
@@ -161,7 +144,6 @@ public class Main {
         String name;
         int att, def, hp, maxHp, exp;
         boolean isBoss;
-
         Monster(String name, int att, int def, int hp, int maxHp, int exp, boolean isBoss) {
             this.name = name;
             this.att = att;
@@ -172,18 +154,17 @@ public class Main {
             this.isBoss = isBoss;
         }
     }
-
+    
     static int getIntPos(int x, int y) {
         return (x * 1000) + y;
     }
-
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
         grid = new char[n + 1][m + 1];
-
         int sx = 0;
         int sy = 0;
         int monsters = 0;
@@ -201,10 +182,8 @@ public class Main {
                 }
             }
         }
-
         char[] seq = br.readLine().toCharArray();
         for (char c : seq) q.add(c);
-
         for (int i = 0; i < monsters; i++) {
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
@@ -215,11 +194,9 @@ public class Main {
             int maxHp = Integer.parseInt(st.nextToken());
             int exp = Integer.parseInt(st.nextToken());
             boolean isBoss = grid[x][y] == 'M';
-
             int pos = getIntPos(x, y);
             monsterBook.put(pos, new Monster(name, att, def, maxHp, maxHp, exp, isBoss));
         }
-
         for (int i = 0; i < items; i++) {
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
@@ -229,7 +206,6 @@ public class Main {
             int pos = getIntPos(x, y);
             itemBook.put(pos, new String[]{name, detail});
         }
-
         startGame(sx, sy);
         System.out.println(sb);
     }
@@ -245,13 +221,10 @@ public class Main {
             int dir = getDirection(q.poll());
             int nx = tk.cx + dt[dir][0];
             int ny = tk.cy + dt[dir][1];
-
-            if (!(nx > n || nx < 1 || ny > m || ny < 1 || grid[nx][ny] == '#')) { // 이동가능
+            if (!(nx > n || nx < 1 || ny > m || ny < 1 || grid[nx][ny] == '#')) { 
                 tk.cx = nx;
                 tk.cy = ny;
             }
-
-            // 이동한 칸 처리 : #, @ 나올 수 없음
             switch (grid[tk.cx][tk.cy]) {
                 case '.':
                     break;
@@ -268,56 +241,49 @@ public class Main {
                     int monsterPos = getIntPos(tk.cx, tk.cy);
                     Monster monster = monsterBook.get(monsterPos);
                     tk.fightWithMonster(monster);
-                    if (tk.isDeadByMonster()) { // 죽음
+                    if (tk.isDeadByMonster()) {
                         exitCode = "KILLED";
                         break;
                     }
-                    if(usedRE) { // RE로 살아났다면 원점으로 돌아가야함
+                    if(usedRE) { 
                         tk.hp = tk.maxHp;
                         tk.cx = sx;
                         tk.cy = sy;
                         tk.itemSet.remove("RE");
                         tk.oparts--;
-                        monster.hp = monster.maxHp; // 몬스터 체력 복구
+                        monster.hp = monster.maxHp; 
                         usedRE = false;
                         break;
                     }
-
-                    // 몬스터 사냥에 성공
                     if(monster.isBoss) {
                         exitCode = "WIN";
                     }
                     tk.getRewardForVictory(monsterPos);
                     tk.levelUpCheck();
             }
-
-            // 입력된 이동을 다했다
-            if (exitCode.isEmpty() && q.isEmpty()) { // 다른 결과 덮는것 방지
+            if (exitCode.isEmpty() && q.isEmpty()) {
                 exitCode = "FINISHED";
             }
-
-            // 종료 조건 확인
             switch (exitCode) {
-                case "FINISHED":  // 입력된 이동을 다함
+                case "FINISHED":  
                     result = "Press any key to continue.";
                     grid[tk.cx][tk.cy] = '@';
                     break game;
-                case "WIN":  // 보스 잡음 : grid 에 @ 포함시키고 종료
+                case "WIN": 
                     result = "YOU WIN!";
                     grid[tk.cx][tk.cy] = '@';
                     break game;
-                case "KILLED":  // 몬스터에게 사망
+                case "KILLED": 
                     int monsterPos = getIntPos(tk.cx, tk.cy);
                     Monster monster = monsterBook.get(monsterPos);
                     String monsterName = monster.name;
                     result = "YOU HAVE BEEN KILLED BY " + monsterName + "..";
                     break game;
-                case "SPIKE TRAP":  // 트랩에 사망
+                case "SPIKE TRAP": 
                     result = "YOU HAVE BEEN KILLED BY SPIKE TRAP..";
                     break game;
             }
         }
-
         makeAnswer(T, tk, result);
     }
 
@@ -333,23 +299,19 @@ public class Main {
                 return 3;
         }
     }
-
     static void makeAnswer(int T, TaekHee tk, String result) {
-        // grid 출력
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= m; j++) {
                 sb.append(grid[i][j]);
             }
             sb.append("\n");
         }
-        // 게임과 택희 정보 출력
         sb.append("Passed Turns : ").append(T).append("\n");
         sb.append("LV : ").append(tk.lv).append("\n");
         sb.append("HP : ").append(tk.hp).append("/").append(tk.maxHp).append("\n");
         sb.append("ATT : ").append(tk.att).append("+").append(tk.aAtt).append("\n");
         sb.append("DEF : ").append(tk.def).append("+").append(tk.aDef).append("\n");
         sb.append("EXP : ").append(tk.exp).append("/").append(tk.nExp).append("\n");
-        // 결과메세지 출력
         sb.append(result);
     }
 }
