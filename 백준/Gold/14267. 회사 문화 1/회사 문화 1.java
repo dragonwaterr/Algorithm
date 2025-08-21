@@ -38,12 +38,10 @@ public class Main {
         }
 
         Queue<Integer> q = new ArrayDeque<>();
-        boolean[] visited = new boolean[n+1];
 
         for (int i = 0; i < subOrd[1].size(); i++) {
             int sub = (int)subOrd[1].get(i);
             q.add(sub);
-            visited[sub] = true;
         }
 
         // 사장의 직속후배(들) 부터 시작
@@ -55,8 +53,6 @@ public class Main {
                 for (int i = 0; i < subOrd[cur].size(); i++) {
                     int sub =  (int)subOrd[cur].get(i);
                     praise[sub] += pr;
-                    if(visited[sub]) continue;
-                    visited[sub] = true;
                     q.add(sub);
                 }
             }
