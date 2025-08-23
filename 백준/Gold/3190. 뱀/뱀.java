@@ -1,8 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -44,8 +44,8 @@ public class Main {
         int len = 1; // 뱀 길이
         int spinOrder = 0; // 회전 방향 정보를 arr로 담아서 순서 필요
         
-        Deque<Snake> dq = new LinkedList<>();
-        dq.add(new Snake(1, 1, 0)); // 크기 1짜리 뱀으로 시작
+        Queue<Snake> q = new ArrayDeque<>();
+        q.add(new Snake(1, 1, 0)); // 크기 1짜리 뱀으로 시작
 
         while(true) { 
             answer++;
@@ -54,7 +54,7 @@ public class Main {
                 if(spin[spinOrder][1].equals("D")) direction = (direction + 1) % 4;
                 else direction = (direction == 0) ? 3 : direction-1;
                 spinOrder++;
-                dq.peekFirst().dir = direction; // 머리의 방향이 바뀜
+                q.peek().dir = direction; // 머리의 방향이 바뀜
             }
 
             boolean flag = false; // 사과를 먹었을 때 꼬리 칸을 남기기 위한 플래그
@@ -62,8 +62,8 @@ public class Main {
             int clen = len; // 반복문 기준으로 사용할 변수. len은 사과를 먹었을 때 변동이 생김
 
             for(int i = 0; i < clen; i++) {
-                int ny = dq.peekFirst().y_pos + dxy[dq.peekFirst().dir][0];
-                int nx = dq.peekFirst().x_pos + dxy[dq.peekFirst().dir][1];
+                int ny = q.peek().y_pos + dxy[q.peek().dir][0];
+                int nx = q.peek().x_pos + dxy[q.peek().dir][1];
                 
                 if(graph[ny][nx] == 1) { // 1. 머리가 사과를 먹는다
                     graph[ny][nx] = 0; 
@@ -74,10 +74,10 @@ public class Main {
                     return;
                 }
 
-                Snake cur = dq.pollFirst();
-                if(i == 0) dq.addLast(new Snake(ny, nx, cur.dir));
+                Snake cur = q.poll();
+                if(i == 0) q.add(new Snake(ny, nx, cur.dir));
                     // 회전을 하지 않는다면 머리가 따라갈 방향은 이전의 내방향
-                else dq.addLast(new Snake(ny, nx, prev.dir)); 
+                else q.add(new Snake(ny, nx, prev.dir)); 
                     // 몸통이 따라갈 방향은 내 바로 앞 몸통의 방향
                 graph[cur.y_pos][cur.x_pos] = 0;
                 graph[ny][nx] = 2;
@@ -86,7 +86,7 @@ public class Main {
                     // -> 뒷 몸통에 따라올 방향을 알려주기 위해
             }
             if(flag) {
-                dq.addLast(prev); // 뺐던 꼬리 다시 넣기
+                q.add(prev); // 뺐던 꼬리 다시 넣기
                 graph[prev.y_pos][prev.x_pos] = 2;
             }
         }
