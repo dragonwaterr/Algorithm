@@ -41,15 +41,11 @@ public class Main {
             int people = city.people;
 
             for (int i = 1; i <= c; i++) { 
-                int q = (int) Math.ceil((double) i / people);
-                dp[i] = Math.min(dp[i], cost * q);
-
-                for (int j = 1; j <= q; j++) { 
-                    int t = people * j;
-                    if (i >= t) {
-                        dp[i] = Math.min(dp[i], dp[i - t] + dp[t]);
-                    }
+                if(i <= people) { 
+                    dp[i] = Math.min(dp[i], dp[0] + cost);   
+                    continue;
                 }
+                dp[i] = Math.min(dp[i], dp[i - people] + cost);
             }
         }
 
