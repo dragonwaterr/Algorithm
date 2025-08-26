@@ -18,30 +18,35 @@ public class Main {
         }
         coupon[n][1] = Integer.MAX_VALUE;
         Arrays.sort(coupon, (o1, o2) -> o1[1] == o2[1]
-                ? o1[0] - o2[0]
-                : o1[1] - o2[1]
+            ? o1[0] - o2[0]
+            : o1[1] - o2[1]
         );
 
         long extend = 0;
-        for (int i = 0; i < n; i++) {
-            while(coupon[i][0] < coupon[i][1]) {
-                extend++;
-                coupon[i][0] += 30;
-            }
-            
-            if(coupon[i][1] == coupon[i+1][1]) continue;
+        int max = 0;
+        int plan = coupon[0][1];
 
-            int idx = i+1;
-            int samePlan = coupon[idx][1];
-            while(idx < n && coupon[idx][1] == samePlan) { 
-                while(coupon[i][0] > coupon[idx][0]) {
-                    extend++;
-                    coupon[idx][0] += 30;
+        for (int i = 0; i < n; i++) {
+            if(i != 0 && plan != coupon[i][1]) {
+                plan = coupon[i][1];
+                for(int j = i; coupon[j][1] == plan; j++) {
+                    if(max > coupon[j][0]) {
+                        int need = max - coupon[j][0];
+                        int cnt = (need + 29) / 30;
+                        extend += cnt;
+                        coupon[j][0] += cnt * 30;
+                    }
                 }
-                idx++;
             }
-            
-            Arrays.parallelSort(coupon, i, idx, (o1, o2) -> o1[0] - o2[0]);
+
+            if (coupon[i][0] < coupon[i][1]) {
+                int need = coupon[i][1] - coupon[i][0];
+                int cnt = (need + 29) / 30;
+                extend += cnt;
+                coupon[i][0] += cnt * 30;
+            }
+            max = Math.max(max, coupon[i][0]);
+            plan = coupon[i][1];
 
         }
         System.out.println(extend);
