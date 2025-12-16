@@ -25,10 +25,9 @@ class Main {
             String str = br.readLine();
             parentheses(sb, str);
             sb.append("\n");
-            bw.write(sb.toString());
-            sb.setLength(0);
         }
         br.close();
+        bw.write(sb.toString());
         bw.flush();
         bw.close();
     }
