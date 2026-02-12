@@ -38,27 +38,23 @@ public class Main {
             }
 
             // 이전 값 후보 1: cur.num * 2 (이전이 짝수였던 경우)
-            Node from_even = new Node(cur.num * 2, nextTurn);
-            if(from_even.num != 1 || !visited.getOrDefault(nextTurn, new HashSet<>()).contains(from_even.num)) {
-                if(visited.get(nextTurn) == null) {
-                    visited.put(nextTurn, new HashSet<>());
-                }
-                visited.get(nextTurn).add(from_even.num);
-                dq.add(from_even);
+            Node even = new Node(cur.num * 2, nextTurn);
+            if(even.num != 1 || !visited.getOrDefault(nextTurn, new HashSet<>()).contains(even.num)) {
+                visited.computeIfAbsent(nextTurn, k -> new HashSet<>());
+                visited.get(nextTurn).add(even.num);
+                dq.add(even);
             }
 
             // 이전 값 후보 2: (cur.num - 1) / 3 (이전이 홀수였던 경우)
             if((cur.num - 1) % 3 == 0) {
                 long prev = (cur.num - 1) / 3;
                 if(prev == 1) continue;
-                if(prev > 0 && prev % 2 == 1) {  // 홀수여야 함
-                    Node from_odd = new Node(prev, nextTurn);
-                    if(!visited.getOrDefault(nextTurn, new HashSet<>()).contains(from_odd.num)) {
-                        if(visited.get(nextTurn) == null) {
-                            visited.put(nextTurn, new HashSet<>());
-                        }
-                        visited.get(nextTurn).add(from_odd.num);
-                        dq.add(from_odd);
+                if(prev % 2 == 1) {  // 홀수여야 함
+                    Node odd = new Node(prev, nextTurn);
+                    if(!visited.getOrDefault(nextTurn, new HashSet<>()).contains(odd.num)) {
+                        visited.computeIfAbsent(nextTurn, k -> new HashSet<>());
+                        visited.get(nextTurn).add(odd.num);
+                        dq.add(odd);
                     }
                 }
             }
