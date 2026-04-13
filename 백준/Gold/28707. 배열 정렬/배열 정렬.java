@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-// 큐 + 매번 비내림차순 확인해서 최솟값 갱신하기
+// 큐 + 마지막에 비내림차순 정렬 시켜서 key 로 val 조회하기
 
 class Main {
     public static void main(String[] args) throws IOException {
@@ -39,31 +39,31 @@ class Main {
         
         while(!q.isEmpty()) {
             int[] cur = q.remove();
-            int val = map.get(trans(cur, N)); // {ACAC, 0}
+            int val = map.get(trans(cur, N)); 
             
-            for(int i = 0; i < M; i++) { // 
-                // swap
+            for(int i = 0; i < M; i++) { 
                 int[] cp = cur.clone(); 
                 Edge e = edges[i];
                 int tmp = cp[e.from];
                 cp[e.from] = cp[e.to];
                 cp[e.to] = tmp;
                 
-                // trans
                 String str = trans(cp, N);
                 
-                // 현재 상태를 만드는 최솟값인지 체크
                 int sum = val + e.cost;
                 if(map.get(str) == null || map.get(str) > sum) {
                     map.put(str, sum);
                     q.add(cp);
                 }
-                
-                // 갱신
-                if(isAsc(str)) {
-                    answer = Math.min(answer, sum);
-                }
             }
+        }
+        
+        char[] cArr = s.toCharArray();
+        Arrays.sort(cArr);
+        String sorted = new String(cArr);
+        
+        if(isAsc(sorted) && map.get(sorted) != null) {
+            answer = Math.min(answer, map.get(sorted));
         }
         
         if(answer == 987654321) {
